@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { registerSchema } from "@/lib/validators/auth";
 
 const RegisterPage = () => {
   const [error, setError] = useState<null | string>("");
@@ -40,7 +41,7 @@ const RegisterPage = () => {
         <h1 className="text-2xl font-sans">Register</h1>
         <form>
           <div className="flex flex-col mb-4">
-            <label className="pl-1">Name</label>
+            <label className="pl-1 text-sm">Name</label>
             <input
               className="bg-white text-black placeholder:text-[#574f4f] placeholder:border-none px-4 py-2 rounded-md"
               type="text"
@@ -50,9 +51,9 @@ const RegisterPage = () => {
             />
           </div>
           <div className="flex flex-col mb-4">
-            <label className="">Email</label>
+            <label className="pl-1 text-sm">Email</label>
             <input
-            className="bg-white text-black placeholder:text-[#574f4f] placeholder:border-none px-4 py-2 rounded-md"
+              className="bg-white text-black placeholder:text-[#574f4f] placeholder:border-none px-4 py-2 rounded-md"
               type="email"
               name="email"
               placeholder="you@example.com"
@@ -60,9 +61,9 @@ const RegisterPage = () => {
             />
           </div>
           <div className="flex flex-col mb-5">
-            <label className="">Password</label>
+            <label className="pl-1 text-sm">Password</label>
             <input
-            className="bg-white text-black placeholder:text-[#574f4f] placeholder:border-none px-4 py-2 rounded-md"
+              className="bg-white text-black placeholder:text-[#574f4f] placeholder:border-none px-4 py-2 rounded-md"
               type="password"
               name="password"
               placeholder="********"
@@ -71,7 +72,10 @@ const RegisterPage = () => {
           </div>
 
           <button
-          className="w-full rounded-md cursor-pointer px-4 py-2 bg-[#424040]" type="submit" disabled={loading}>
+            className="w-full rounded-md cursor-pointer px-4 py-2 bg-[#424040]"
+            type="submit"
+            disabled={loading}
+          >
             {loading ? "Creating account..." : "Register"}
           </button>
         </form>
