@@ -15,24 +15,34 @@ const RegisterPage = () => {
 
     const formData = new FormData(e.currentTarget);
 
-    const name = formData.get("name") as string;
-    const email = formData.get("email") as string;
-    const password = formData.get("password") as string;
+    const input = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      password: formData.get("password"),
+    };
+    const result = registerSchema.safeParse(input);
+
+    if (!result.success) {
+      setError(result.error.issues[0]?.message ?? "Invalid Input");
+      setLoading(false);
+      return;
+    }
+
+    const { name, email, password } = result.data;
 
     const { error, data } = await authClient.signUp.email({
       name,
       email,
       password,
     });
-
     setLoading(false);
 
     if (error) {
-      setError(error.message || "Registration failed");
+      setError(error.message || "Registration failed.");
       return;
     }
 
-    console.log("Data from auth client res", data);
+    console.log("Registration successful");
   };
 
   return (
