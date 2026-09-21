@@ -1,68 +1,53 @@
 "use client";
+import React, { FormEvent, useState } from "react";
+import { loginSchema } from "@/lib/validators/auth";
 
-import { FormEvent, useState } from "react";
-import { authClient } from "@/lib/auth-client";
-import { registerSchema } from "@/lib/validators/auth";
 import { useRouter } from "next/router";
+import { authClient } from "@/lib/auth-client";
 
-const RegisterPage = () => {
-  const router = useRouter();
+const LoginPage = async () => {
   const [error, setError] = useState<null | string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError("");
-    setLoading(true);
+    setLoading(false);
 
     const formData = new FormData(e.currentTarget);
 
     const input = {
-      name: formData.get("name"), // .get is getting the name of the input in the form
       email: formData.get("email"),
       password: formData.get("password"),
     };
-    const result = registerSchema.safeParse(input);
+
+    const result = loginSchema.safeParse(input);
 
     if (!result.success) {
-      setError(result.error.issues[0]?.message ?? "Invalid Input");
+      setError(result.error.issues[0]?.message || "Invalid Input");
       setLoading(false);
-      return;
     }
 
-    const { name, email, password } = result.data;
+    const { email, password } = result.data;
 
-    const { error, data } = await authClient.signUp.email({
-      name,
-      email,
-      password,
-    });
+    const { error, data } = await authClient.signIn.email({ email, password });
+
     setLoading(false);
 
     if (error) {
-      setError(error.message || "Registration failed.");
+      setError(error.message || "Login failed.");
       return;
     }
 
-    console.log("Registration successful", data);
-    router.push("/dashboard");
+    console.log("Login successful", data);
+    useRouter().push("/dashboard");
   };
 
   return (
     <main className="h-screen w-screen flex justify-center items-center flex-col">
       <div className="bg-[#111111] flex flex-col gap-5 justify-center items-center p-10 rounded-2xl">
-        <h1 className="text-2xl font-sans">Register</h1>
+        <h1 className="text-2xl font-sans">Login</h1>
         <form>
-          <div className="flex flex-col mb-4">
-            <label className="pl-1 text-sm">Name</label>
-            <input
-              className="bg-white text-black placeholder:text-[#574f4f] placeholder:border-none px-4 py-2 rounded-md"
-              type="text"
-              name="name"
-              placeholder="John Doe"
-              required
-            />
-          </div>
           <div className="flex flex-col mb-4">
             <label className="pl-1 text-sm">Email</label>
             <input
@@ -73,7 +58,7 @@ const RegisterPage = () => {
               required
             />
           </div>
-          <div className="flex flex-col mb-5">
+          <div className="flex flex-col mb-4">
             <label className="pl-1 text-sm">Password</label>
             <input
               className="bg-white text-black placeholder:text-[#574f4f] placeholder:border-none px-4 py-2 rounded-md"
@@ -89,14 +74,12 @@ const RegisterPage = () => {
             type="submit"
             disabled={loading}
           >
-            {loading ? "Creating account..." : "Register"}
+            {loading ? "Logging in..." : "Login"}
           </button>
         </form>
       </div>
-
-      {error && <p>{error}</p>}
     </main>
   );
 };
 
-export default RegisterPage;
+export default LoginPage;
