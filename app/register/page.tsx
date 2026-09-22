@@ -3,7 +3,7 @@
 import { FormEvent, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { registerSchema } from "@/lib/validators/auth";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 const RegisterPage = () => {
   const router = useRouter();
@@ -52,7 +52,7 @@ const RegisterPage = () => {
     <main className="h-screen w-screen flex justify-center items-center flex-col">
       <div className="bg-[#111111] flex flex-col gap-5 justify-center items-center p-10 rounded-2xl">
         <h1 className="text-2xl font-sans">Register</h1>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="flex flex-col mb-4">
             <label className="pl-1 text-sm">Name</label>
             <input

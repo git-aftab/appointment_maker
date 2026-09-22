@@ -1,11 +1,13 @@
 "use client";
+
 import React, { FormEvent, useState } from "react";
 import { loginSchema } from "@/lib/validators/auth";
 
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 import { authClient } from "@/lib/auth-client";
 
-const LoginPage = async () => {
+const LoginPage = () => {
+  const router = useRouter();
   const [error, setError] = useState<null | string>("");
   const [loading, setLoading] = useState<boolean>(false);
 
@@ -40,14 +42,14 @@ const LoginPage = async () => {
     }
 
     console.log("Login successful", data);
-    useRouter().push("/dashboard");
+    router.push("/dashboard");
   };
 
   return (
     <main className="h-screen w-screen flex justify-center items-center flex-col">
       <div className="bg-[#111111] flex flex-col gap-5 justify-center items-center p-10 rounded-2xl">
         <h1 className="text-2xl font-sans">Login</h1>
-        <form>
+        <form onSubmit={handleSubmit}>
           <div className="flex flex-col mb-4">
             <label className="pl-1 text-sm">Email</label>
             <input
