@@ -48,5 +48,7 @@ export async function POST(req: Request) {
     appointment_date,
     created_at;
     `;
-  } catch (error) {}
+  } catch (error:any) {
+    return handleApiError(error)
+  }
 }
