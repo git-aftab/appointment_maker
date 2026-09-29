@@ -5,7 +5,6 @@ import { pool } from "@/lib/db";
 import { ApiResponse } from "@/lib/api-res";
 import { apiHandler } from "@/lib/api-handler";
 import { ApiError } from "@/lib/api-error";
-import { handleApiError } from "@/lib/api-error-handler";
 import { createAppointmentSchema } from "@/lib/validators/appointment";
 
 export const POST = apiHandler(async (req: Request) => {
@@ -56,7 +55,7 @@ export const POST = apiHandler(async (req: Request) => {
   );
 });
 
-export const GET = apiHandler(async(req: Request)=>{
+export const GET = apiHandler(async()=>{
   const session = await auth.api.getSession({
     headers: await headers(),
   })

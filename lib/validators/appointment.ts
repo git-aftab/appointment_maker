@@ -13,7 +13,7 @@ export const createAppointmentSchema = z.object({
     .max(500, "Description must be at most 500 characters")
     .optional(),
 
-  appointmentDate: z.string().datetime({ message: "Invalid appointment date" }),
+  appointDateTime: z.string().datetime({ message: "Invalid appointment date" }),
 });
 
 export type createAppointmentInput = z.infer<typeof createAppointmentSchema>;
