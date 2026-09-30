@@ -10,6 +10,7 @@ import { createAppointmentSchema } from "@/lib/validators/appointment";
 export const POST = apiHandler(async (req: Request) => {
   //get the loggedIn user session;
   const session = await auth.api.getSession({ headers: await headers() });
+  console.log("session", session)
 
   if (!session) {
     throw new ApiError(401, "Unauthorized");
@@ -26,7 +27,7 @@ export const POST = apiHandler(async (req: Request) => {
     );
   }
 
-  const { title, appointmentDate, description } = result.data;
+  const { title, appointDateTime, description } = result.data;
 
   const query = `
     Insert into appointments(
@@ -45,7 +46,7 @@ export const POST = apiHandler(async (req: Request) => {
     created_at;
     `;
 
-  const values = [session.user.id, title, description ?? null, appointmentDate];
+  const values = [session.user.id, title, description ?? null, appointDateTime];
 
   const dbResult = await pool.query(query, values);
   console.log(dbResult);

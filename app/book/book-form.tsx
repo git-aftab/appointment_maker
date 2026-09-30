@@ -8,6 +8,8 @@ const BookingForm = () => {
   const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    console.log("Submitting the form");
+
     e.preventDefault();
     setError("");
     setLoading(true);
@@ -19,8 +21,10 @@ const BookingForm = () => {
       description: formData.get("description"),
       appointDateTime: formData.get("appointDateTime"),
     };
+    console.log("input to be parsed", input)
 
     const result = createAppointmentSchema.safeParse(input);
+    console.log(result)
 
     if (!result.success) {
       setError(result.error.issues[0].message ?? "Invalid input");
@@ -42,6 +46,7 @@ const BookingForm = () => {
           appointDateTime,
         }),
       });
+      console.log("Raw Response:", response)
 
       const data = await response.json();
 
@@ -58,6 +63,15 @@ const BookingForm = () => {
       setLoading(false);
     }
   };
+
+  if(error){
+    return (
+      <div>
+        <h1 className="text-red-400">{error}</h1>
+      </div>
+    );
+  }
+
   return (
     <div className="bg-[#111111] flex flex-col gap-5 justify-center items-center p-10 rounded-2xl">
       <h1 className="text-2xl font-sans">Appointment Booking</h1>
@@ -91,7 +105,7 @@ const BookingForm = () => {
         </div>
 
         <button
-          className="w-full rounded-md cursor-pointer px-4 py-2 bg-[#424040]"
+          className="w-full rounded-md cursor-pointer px-4 py-2 bg-[#424040] hover:bg-emerald-600 active:bg-black"
           type="submit"
           disabled={loading}
         >
