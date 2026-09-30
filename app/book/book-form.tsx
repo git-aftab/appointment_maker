@@ -2,11 +2,10 @@
 
 import React, { useState, FormEvent } from "react";
 import { createAppointmentSchema } from "@/lib/validators/appointment";
-import { POST } from "../api/appointments/route";
 
 const BookingForm = () => {
-  const [error, setError] = useState<String | null>("");
-  const [loading, setLoading] = useState<Boolean>(false);
+  const [error, setError] = useState<string | null>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -31,13 +30,33 @@ const BookingForm = () => {
 
     const { title, description, appointDateTime } = result.data;
 
-    const response = fetch("/api/appointments", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title, description, appointDateTime }),
-    });
+    try {
+      const response = await fetch("/api/appointments", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          description,
+          appointDateTime,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.message || "Failed to book appointment");
+        return;
+      }
+
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+      setError("Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
   return (
     <div className="bg-[#111111] flex flex-col gap-5 justify-center items-center p-10 rounded-2xl">
