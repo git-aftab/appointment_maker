@@ -1,26 +1,32 @@
-import {headers} from "next/headers";
-import {redirect} from "next/navigation";
+import { headers } from "next/headers";
+import Link  from "next/link";
 import { auth } from "@/lib/auth";
-
-import React from 'react'
+import {redirect} from "next/navigation"
 
 const DashboardPage = async () => {
-    const session = await auth.api.getSession({
-        headers: await headers(),
-    });
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
 
-    if(!session){
-        redirect("/login");
-    }
-    
+  if (!session) {
+    redirect("/login");
+  }
 
   return (
     <div>
-        <h1>Welcome, {session.user.name}</h1>
-        <h1>Welcome, {session.user.email}</h1>
-        <h1>Welcome, {session.user.id}</h1>
-    </div>
-  )
-}
+      <h1>Welcome, {session.user.name}</h1>
+      <h1>Welcome, {session.user.email}</h1>
+      <h1>Welcome, {session.user.id}</h1>
 
-export default DashboardPage
+      <br></br>
+      <Link
+      href={"/book"}>
+        <button className="bg-emerald-600 hover:bg-emerald-300 text-white">
+          Book Appointment
+        </button>
+      </Link>
+    </div>
+  );
+};
+
+export default DashboardPage;

@@ -1,11 +1,23 @@
 "use client";
 
-import React, { useState, FormEvent } from "react";
+import React, { useState, FormEvent, useEffect } from "react";
 import { createAppointmentSchema } from "@/lib/validators/appointment";
 
 const BookingForm = () => {
   const [error, setError] = useState<string | null>("");
   const [loading, setLoading] = useState<boolean>(false);
+  const [isSuccess, setIsSuccess] = useState<boolean>(false);
+  const [ShowSuccess, setShowSuccess] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (!ShowSuccess) return;
+
+    const timer = setTimeout(() => {
+      setShowSuccess(false);
+    }, 3000);
+
+    return () => clearTimeout(timer);
+  }, [ShowSuccess]);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     console.log("Submitting the form");
@@ -14,17 +26,18 @@ const BookingForm = () => {
     setError("");
     setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
+    const form = e.currentTarget;
+    const formData = new FormData(form);
 
     const input = {
       title: formData.get("title"),
       description: formData.get("description"),
       appointDateTime: formData.get("appointDateTime"),
     };
-    console.log("input to be parsed", input)
+    console.log("input to be parsed", input);
 
     const result = createAppointmentSchema.safeParse(input);
-    console.log(result)
+    console.log(result);
 
     if (!result.success) {
       setError(result.error.issues[0].message ?? "Invalid input");
@@ -46,7 +59,7 @@ const BookingForm = () => {
           appointDateTime,
         }),
       });
-      console.log("Raw Response:", response)
+      console.log("Raw Response:", response);
 
       const data = await response.json();
 
@@ -54,17 +67,21 @@ const BookingForm = () => {
         setError(data.message || "Failed to book appointment");
         return;
       }
-
       console.log(data);
+      console.log("Success booking");
+      setShowSuccess(true)
+      setIsSuccess(true);
+      form.reset();
     } catch (error) {
       console.error(error);
       setError("Something went wrong. Please try again.");
+      setIsSuccess(false);
     } finally {
       setLoading(false);
     }
   };
 
-  if(error){
+  if (error) {
     return (
       <div>
         <h1 className="text-red-400">{error}</h1>
@@ -74,6 +91,11 @@ const BookingForm = () => {
 
   return (
     <div className="bg-[#111111] flex flex-col gap-5 justify-center items-center p-10 rounded-2xl">
+      {ShowSuccess && (
+        <div className=" text-black px-5 py-2.5 bg-emerald-300 rounded-md">
+          Successfully booked Appointment
+        </div>
+      )}
       <h1 className="text-2xl font-sans">Appointment Booking</h1>
       <form onSubmit={handleSubmit}>
         <div className="flex flex-col mb-4">
