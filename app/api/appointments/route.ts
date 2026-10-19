@@ -10,7 +10,7 @@ import { createAppointmentSchema } from "@/lib/validators/appointment";
 export const POST = apiHandler(async (req: Request) => {
   //get the loggedIn user session;
   const session = await auth.api.getSession({ headers: await headers() });
-  console.log("session", session)
+  console.log("session", session);
 
   if (!session) {
     throw new ApiError(401, "Unauthorized");
@@ -56,12 +56,12 @@ export const POST = apiHandler(async (req: Request) => {
   );
 });
 
-export const GET = apiHandler(async()=>{
+export const GET = apiHandler(async () => {
   const session = await auth.api.getSession({
     headers: await headers(),
-  })
+  });
 
-  if(!session){
+  if (!session) {
     throw new ApiError(401, "Unauthorized");
   }
 
@@ -71,6 +71,25 @@ export const GET = apiHandler(async()=>{
 
   const result = await pool.query(query, [session.user.id]);
   return Response.json(
-    new ApiResponse(200, result.rows, "Aappointment fetched successfully")
-  )
-})
+    new ApiResponse(200, result.rows, "Aappointment fetched successfully"),
+  );
+});
+
+// export const DELETE = apiHandler(async (req: Request) => {
+//   const session = await auth.api.getSession({
+//     headers: await headers(),
+//   })
+
+//   const {appointmentId: unknown} = req.params
+
+//   if(!session){
+//     throw new ApiError(401, "Unathorized");
+//   }
+
+//   const query = `delete from appointments where id = $1 and user_id = $2`
+//   const result = await pool.query(query, [appointmentId, session.user.id]);
+
+//   return Response.json(
+//     new ApiResponse(200, {}, "Appointment deleted successfully."),
+//   );
+// });
