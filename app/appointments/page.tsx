@@ -2,7 +2,8 @@ import Link from "next/link";
 import { redirect } from "next/navigation";
 import { headers } from "next/headers";
 import { auth } from "@/lib/auth";
-import { pool } from "@/lib/db";
+import { pool } from "@/lib/db"
+import DelAppointment from "./appointment";
 
 const page = async () => {
   const session = await auth.api.getSession({
@@ -42,6 +43,7 @@ const page = async () => {
             <h2>{appointment.title}</h2>
             <p>{appointment.description || "No description"}</p>
             <p>{new Date(appointment.appointment_date).toLocaleString()}</p>
+            <DelAppointment id={appointment.id}/>
           </article>
         ))
       )}

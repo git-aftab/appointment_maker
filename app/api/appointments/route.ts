@@ -75,21 +75,3 @@ export const GET = apiHandler(async () => {
   );
 });
 
-// export const DELETE = apiHandler(async (req: Request) => {
-//   const session = await auth.api.getSession({
-//     headers: await headers(),
-//   })
-
-//   const {appointmentId: unknown} = req.params
-
-//   if(!session){
-//     throw new ApiError(401, "Unathorized");
-//   }
-
-//   const query = `delete from appointments where id = $1 and user_id = $2`
-//   const result = await pool.query(query, [appointmentId, session.user.id]);
-
-//   return Response.json(
-//     new ApiResponse(200, {}, "Appointment deleted successfully."),
-//   );
-// });
